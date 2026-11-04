@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Computer Registration System</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #243247;
+}
+
+header {
+    background: #123b70;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav {
+    background: white;
+    padding: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+nav button {
+    background: #e4edf8;
+    color: #123b70;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+nav button.active,
+nav button:hover {
+    background: #123b70;
+    color: white;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px #0001;
+}
+
+h2 {
+    color: #123b70;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 7px 0 12px;
+    border: 1px solid #ccd5df;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+.submit {
+    background: #1769aa;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit:hover {
+    background: #104c7c;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 11px;
+    text-align: left;
+}
+
+th {
+    background: #123b70;
+    color: white;
+}
+
+.delete {
+    background: #c62828;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.box {
+    background: #e5effb;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.box h3 {
+    color: #123b70;
+    font-size: 28px;
+}
+
+.student-photo {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+#picturePreview {
+    display: none;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 10px 0;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+@media(max-width:600px) {
+    header h1 {
+        font-size: 22px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>COMPUTER REGISTRATION SYSTEM</h1>
+    <p>Student and Computer Laboratory Management</p>
+</header>
+
+<nav>
+    <button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
+    <button onclick="showPage('students',this)">Student Registration</button>
+    <button onclick="showPage('computers',this)">Computer Units</button>
+    <button onclick="showPage('subjects',this)">Subjects & Instructors</button>
+    <button onclick="showPage('attendance',this)">Time-in / Time-out</button>
+    <button onclick="showPage('records',this)">Records & Search</button>
+</nav>
+
+<div class="container">
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="page active">
+
+<div class="card">
+    <h2>System Dashboard</h2>
+    <p>Welcome to the Computer Registration System!</p>
+
+    <div class="summary">
+
+        <div class="box">
+            <h3 id="studentCount">0</h3>
+            <p>Registered Students</p>
+        </div>
+
+        <div class="box">
+            <h3 id="computerCount">0</h3>
+            <p>Computer Units</p>
+        </div>
+
+        <div class="box">
+            <h3 id="subjectCount">0</h3>
+            <p>Subjects</p>
+        </div>
+
+        <div class="box">
+            <h3 id="recordCount">0</h3>
+            <p>Usage Records</p>
+        </div>
+
+    </div>
+</div>
+</section>
+
+<!-- STUDENT REGISTRATION -->
+
+<section id="students" class="page">
+
+<div class="card">
+<h2>Student Registration</h2>
+
+<form id="studentForm">
+
+<label>Student Picture</label>
+<input
+    type="file"
+    id="studentPicture"
+    accept="image/*"
+    required
+
+
+<img id="picturePreview" alt="Student Picture Preview">
+
+<label>Student ID</label>
+<input id="studentId" required placeholder="Enter Student ID">
+
+<label>Full Name</label>
+<input id="studentName" required placeholder="Enter Full Name">
+
+<label>Course</label>
+<input id="course" required placeholder="Enter Course">
+
+<label>Year Level</label>
+<select id="year" required>
+    <option value="">Select Year Level</option>
+    <option>1st Year</option>
+    <option>2nd Year</option>
+    <option>3rd Year</option>
+    <option>4th Year</option>
+    <option>5th Year</option>
+</select>
+
+<label>Section</label>
+<input id="section" required placeholder="Enter Section">
+
+<button class="submit">Register Student</button>
+
+</form>
+</div>
+
+<div class="card">
+<h2>Registered Students</h2>
+
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Picture</th>
+<th>Student ID</th>
+<th>Name</th>
+<th>Course</th>
+<th>Year</th>
+<th>Section</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="studentTable"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+<!-- COMPUTER UNITS -->
+
+<section id="computers" class="page">
+
+<div class="card">
+<h2>Computer Unit Management</h2>
+
+<form id="computerForm">
+
+<label>Computer ID</label>
+<input id="computerId" required placeholder="Example: PC-001">
+
+<label>Brand</label>
+<input id="brand" required placeholder="HP, Dell, Acer">
+
+<label>Model</label>
+<input id="model" required placeholder="Enter Model">
+
+<label>Status</label>
+<select id="computerStatus">
+<option>Working</option>
+<option>Under Maintenance</option>
+<option>Not Working</option>
+</select>
+
+<button class="submit">Register Computer</button>
+
+</form>
+</div>
+
+<div class="card">
+<h2>Computer Unit List</h2>
+
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Computer ID</th>
+<th>Brand</th>
+<th>Model</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="computerTable"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+<!-- SUBJECTS AND INSTRUCTORS -->
+
+<section id="subjects" class="page">
+
+<div class="card">
+<h2>Subject and Instructor Recording</h2>
+
+<form id="subjectForm">
+
+<label>Subject Code</label>
+<input id="subjectCode" required>
+
+<label>Subject Name</label>
+<input id="subjectName" required>
+
+<label>Instructor Name</label>
+<input id="instructor" required>
+
+<button class="submit">Add Subject</button>
+
+</form>
+</div>
+
+<div class="card">
+<h2>Subject and Instructor List</h2>
+
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Subject Code</th>
+<th>Subject Name</th>
+<th>Instructor</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="subjectTable"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+<!-- ATTENDANCE -->
+
+<section id="attendance" class="page">
+
+<div class="card">
+<h2>Computer Laboratory Time-in / Time-out</h2>
+
+<form id="attendanceForm">
+
+<label>Select Student</label>
+<select id="attendanceStudent" required></select>
+
+<label>Select Computer</label>
+<select id="attendanceComputer" required></select>
+
+<label>Select Subject</label>
+<select id="attendanceSubject" required></select>
+
+<button class="submit">Time In</button>
+
+</form>
+</div>
+
+<div class="card">
+<h2>Active Laboratory Sessions</h2>
+
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Student</th>
+<th>Computer</th>
+<th>Subject</th>
+<th>Time In</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="activeTable"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+<!-- RECORDS -->
+
+<section id="records" class="page">
+
+<div class="card">
+<h2>Student Computer Usage Records</h2>
+
+<input
+    id="searchRecords"
+    placeholder="Search Student ID, Name, Computer or Subject..."
+
+
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Student ID</th>
+<th>Student Name</th>
+<th>Computer</th>
+<th>Subject</th>
+<th>Time In</th>
+<th>Time Out</th>
+</tr>
+</thead>
+
+<tbody id="recordsTable"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+</div>
+
+<footer>
+<p>Computer Registration System | Research Project</p>
+</footer>
+
+<script>
+
+// STORAGE
+
+function load(key) {
+    return JSON.parse(localStorage.getItem(key) || "[]");
+}
+
+function save(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        alert("Storage is full. Please use a smaller picture.");
+        return false;
+    }
+}
+
+let students = load("students");
+let computers = load("computers");
+let subjects = load("subjects");
+let records = load("records");
+
+// ELEMENT HELPER
+
+const $ = id => document.getElementById(id);
+
+// NAVIGATION
+
+function showPage(id, button) {
+    document.querySelectorAll(".page").forEach(page =>
+        page.classList.remove("active")
+    );
+
+    $(id).classList.add("active");
+
+    document.querySelectorAll("nav button").forEach(btn =>
+        btn.classList.remove("active")
+    );
+
+    button.classList.add("active");
+    render();
+}
+
+// STUDENT PICTURE PREVIEW
+
+$("studentPicture").addEventListener("change", function() {
+
+    const file = this.files[0];
+    const preview = $("picturePreview");
+
+    if (!file) {
+        preview.style.display = "none";
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        alert("Please select a valid picture.");
+        this.value = "";
+        preview.style.display = "none";
+        return;
+    }
+
+    if (file.size > 500 * 1024) {
+        alert("Please select a picture smaller than 500KB.");
+        this.value = "";
+        preview.style.display = "none";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file);
+});
+
+// TABLE HELPERS
+
+function addCell(row, value) {
+    const cell = document.createElement("td");
+    cell.textContent = value ?? "";
+    row.appendChild(cell);
+}
+
+function addDelete(row, type, id) {
+
+    const cell = row.insertCell();
+    const button = document.createElement("button");
+
+    button.textContent = "Delete";
+    button.className = "delete";
+
+    button.onclick = () => {
+
+        if (!confirm("Delete this record?")) return;
+
+        if (type === "students") {
+            students = students.filter(x => x.id !== id);
+            save("students", students);
+        }
+
+        if (type === "computers") {
+            computers = computers.filter(x => x.id !== id);
+            save("computers", computers);
+        }
+
+        if (type === "subjects") {
+            subjects = subjects.filter(x => x.id !== id);
+            save("subjects", subjects);
+        }
+
+        render();
+    };
+
+    cell.appendChild(button);
+}
+
+// STUDENT REGISTRATION WITH PICTURE
+
+$("studentForm").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const id = $("studentId").value.trim();
+    const file = $("studentPicture").files[0];
+
+    if (!file) {
+        alert("Please upload a student picture.");
+        return;
+    }
+
+    if (students.some(x =>
+        x.id.toLowerCase() === id.toLowerCase()
+    )) {
+        alert("Student ID already exists!");
+        return;
+    }
+
+    if (file.size > 500 * 1024) {
+        alert("Picture must be smaller than 500KB.");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        const newStudent = {
+            id: id,
+            name: $("studentName").value.trim(),
+            course: $("course").value.trim(),
+            year: $("year").value,
+            section: $("section").value.trim(),
+            picture: e.target.result
+        };
+
+        students.push(newStudent);
+
+        if (!save("students", students)) {
+            students.pop();
+            return;
+        }
+
+        $("studentForm").reset();
+        $("picturePreview").style.display = "none";
+
+        alert("Student registered successfully!");
+
+        render();
+    };
+
+    reader.readAsDataURL(file);
+});
+
+// COMPUTER REGISTRATION
+
+$("computerForm").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const id = $("computerId").value.trim();
+
+    if (computers.some(x =>
+        x.id.toLowerCase() === id.toLowerCase()
+    )) {
+        alert("Computer ID already exists!");
+        return;
+    }
+
+    computers.push({
+        id: id,
+        brand: $("brand").value.trim(),
+        model: $("model").value.trim(),
+        status: $("computerStatus").value
+    });
+
+    if (!save("computers", computers)) {
+        computers.pop();
+        return;
+    }
+
+    this.reset();
+
+    alert("Computer registered successfully!");
+    render();
+});
+
+// SUBJECT REGISTRATION
+
+$("subjectForm").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const id = $("subjectCode").value.trim();
+
+    if (subjects.some(x =>
+        x.id.toLowerCase() === id.toLowerCase()
+    )) {
+        alert("Subject code already exists!");
+        return;
+    }
+
+    subjects.push({
+        id: id,
+        name: $("subjectName").value.trim(),
+        instructor: $("instructor").value.trim()
+    });
+
+    if (!save("subjects", subjects)) {
+        subjects.pop();
+        return;
+    }
+
+    this.reset();
+
+    alert("Subject registered successfully!");
+    render();
+});
+
+// TIME IN
+
+$("attendanceForm").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const student = students.find(
+        x => x.id === $("attendanceStudent").value
+    );
+
+    const computer = computers.find(
+        x => x.id === $("attendanceComputer").value
+    );
+
+    const subject = subjects.find(
+        x => x.id === $("attendanceSubject").value
+    );
+
+    if (!student || !computer || !subject) {
+        alert("Please register students, computers, and subjects first.");
+        return;
+    }
+
+    if (computer.status !== "Working") {
+        alert("This computer is not available.");
+        return;
+    }
+
+    if (records.some(x =>
+        x.studentId === student.id && !x.timeOut
+    )) {
+        alert("This student already has an active session.");
+        return;
+    }
+
+    if (records.some(x =>
+        x.computerId === computer.id && !x.timeOut
+    )) {
+        alert("This computer is currently in use.");
+        return;
+    }
+
+    records.push({
+        studentId: student.id,
+        studentName: student.name,
+        computerId: computer.id,
+        subject: subject.name,
+        instructor: subject.instructor,
+        timeIn: new Date().toLocaleString(),
+        timeOut: ""
+    });
+
+    if (!save("records", records)) {
+        records.pop();
+        return;
+    }
+
+    alert("Time-in recorded successfully!");
+    render();
+});
+
+// TIME OUT
+
+function timeOut(index) {
+
+    records[index].timeOut = new Date().toLocaleString();
+
+    if (!save("records", records)) {
+        records[index].timeOut = "";
+        return;
+    }
+
+    alert("Time-out recorded successfully!");
+    render();
+}
+
+// DROPDOWN
+
+function fillSelect(element, items, label) {
+
+    const oldValue = element.value;
+
+    element.innerHTML = "";
+
+    const first = document.createElement("option");
+    first.value = "";
+    first.textContent = "Select " + label;
+
+    element.appendChild(first);
+
+    items.forEach(x => {
+
+        const option = document.createElement("option");
+
+        option.value = x.id;
+        option.textContent = x.name || x.id;
+
+        element.appendChild(option);
+    });
+
+    element.value = oldValue;
+}
+
+// DISPLAY ALL RECORDS
+
+function render() {
+
+    $("studentTable").innerHTML = "";
+    $("computerTable").innerHTML = "";
+    $("subjectTable").innerHTML = "";
+    $("activeTable").innerHTML = "";
+    $("recordsTable").innerHTML = "";
+
+    // STUDENTS WITH PICTURES
+
+    students.forEach(x => {
+
+        const row = $("studentTable").insertRow();
+
+        const pictureCell = row.insertCell();
+
+        if (x.picture) {
+
+            const img = document.createElement("img");
+
+            img.src = x.picture;
+            img.className = "student-photo";
+            img.alt = "Student picture";
+
+            pictureCell.appendChild(img);
+
+        } else {
+            pictureCell.textContent = "No Picture";
+        }
+
+        [x.id, x.name, x.course, x.year, x.section]
+            .forEach(value => addCell(row, value));
+
+        addDelete(row, "students", x.id);
+    });
+
+    // COMPUTERS
+
+    computers.forEach(x => {
+
+        const row = $("computerTable").insertRow();
+
+        [x.id, x.brand, x.model, x.status]
+            .forEach(value => addCell(row, value));
+
+        addDelete(row, "computers", x.id);
+    });
+
+    // SUBJECTS
+
+    subjects.forEach(x => {
+
+        const row = $("subjectTable").insertRow();
+
+        [x.id, x.name, x.instructor]
+            .forEach(value => addCell(row, value));
+
+        addDelete(row, "subjects", x.id);
+    });
+
+    // DROPDOWNS
+
+    fillSelect($("attendanceStudent"), students, "Student");
+
+    fillSelect(
+        $("attendanceComputer"),
+        computers.filter(x => x.status === "Working"),
+        "Computer"
+    );
+
+    fillSelect($("attendanceSubject"), subjects, "Subject");
+
+    // ACTIVE SESSIONS
+
+    records.forEach((x, index) => {
+
+        if (!x.timeOut) {
+
+            const row = $("activeTable").insertRow();
+
+            [x.studentName, x.computerId, x.subject, x.timeIn]
+                .forEach(value => addCell(row, value));
+
+            const cell = row.insertCell();
+
+            const button = document.createElement("button");
+
+            button.textContent = "Time Out";
+            button.className = "submit";
+
+            button.onclick = () => timeOut(index);
+
+            cell.appendChild(button);
+        }
+    });
+
+    // SEARCH RECORDS
+
+    const query = $("searchRecords").value.toLowerCase();
+
+    records.forEach(x => {
+
+        const searchText = [
+            x.studentId,
+            x.studentName,
+            x.computerId,
+            x.subject,
+            x.instructor
+        ].join(" ").toLowerCase();
+
+        if (searchText.includes(query)) {
+
+            const row = $("recordsTable").insertRow();
+
+            [
+                x.studentId,
+                x.studentName,
+                x.computerId,
+                x.subject,
+                x.timeIn,
+                x.timeOut || "Still using"
+            ].forEach(value => addCell(row, value));
+        }
+    });
+
+    // DASHBOARD
+
+    $("studentCount").textContent = students.length;
+    $("computerCount").textContent = computers.length;
+    $("subjectCount").textContent = subjects.length;
+    $("recordCount").textContent = records.length;
+}
+
+// SEARCH
+
+$("searchRecords").addEventListener("input", render);
+
+// INITIALIZE
+
+render();
+
+</script>
+
+</body>
+</html>
